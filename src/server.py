@@ -16,7 +16,7 @@ def letters_bag():
     return [chr(secrets.randbelow(26) + ord('a')) for _ in range(50)]
 
 
-class client_server(threading.Thread):
+class Client(threading.Thread):
 
     def __init__(self, server, client_accept):
         threading.Thread.__init__(self)
@@ -30,7 +30,7 @@ class client_server(threading.Thread):
     def register(self, public_key):
         if self.public_key == "":
             with lock_clients:
-                server.clients[public_key] = self
+                Server.clients[public_key] = self
                 self.public_key = public_key
                 self.client.send(str({"letters_bag" : letters_bag()}).encode())
                 with lock_printer:
@@ -46,13 +46,13 @@ class client_server(threading.Thread):
         with lock_clients:
             for client_s in self.server.clients.values():
                 with client_s.lock_send:
-                    client_s.client.send(str({"message" : [self.public_key, message]}).encode())
+                    client_s.Client.send(str({"message" : [self.public_key, message]}).encode())
 
     def leave(self, _):
         with lock_clients:
-            del server.clients[self.public_key]
-            if len(server.clients.keys()) == 0:
-                server.working = False
+            del Server.clients[self.public_key]
+            if len(Server.clients.keys()) == 0:
+                Server.working = False
         self.client.close()
         self.working = False
 
@@ -83,7 +83,7 @@ class client_server(threading.Thread):
         self.client.close()
 
 
-class server(threading.Thread):
+class Server(threading.Thread):
 
     def __init__(self, host, proxy):
         threading.Thread.__init__(self)
@@ -99,7 +99,7 @@ class server(threading.Thread):
     def accept_users(self):
         connection_requests, _, _ = select.select([self.main_connection], [], [], 0.05)
         for connection in connection_requests:
-            client_server(self, connection.accept()).start()
+            Client(self, connection.accept()).start()
 
     def run(self):
         self.working = True
@@ -111,5 +111,5 @@ class server(threading.Thread):
 
 
 if __name__ == "__main__":
-    server = server('', 1234)
+    server = Server('', 1234)
     server.start()

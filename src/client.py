@@ -14,7 +14,7 @@ commandes = ["register cyann",
              "talk a",
              "leave"]
 
-class message_box(threading.Thread):
+class MessageBox(threading.Thread):
 
     def __init__(self, connection):
         threading.Thread.__init__(self)
@@ -46,7 +46,7 @@ class message_box(threading.Thread):
                 pass
 
 
-class input_box(threading.Thread):
+class InputBox(threading.Thread):
 
     def __init__(self):
         threading.Thread.__init__(self)
@@ -78,14 +78,14 @@ class input_box(threading.Thread):
 
 
 
-class client:
+class Client:
 
     def __init__(self, host, proxy):
         self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connection.connect((host, proxy))
         print("Connexion établie avec le serveur sur le port {}".format(proxy))
-        self.message_box = message_box(self.connection)
-        self.input_box = input_box()
+        self.message_box = MessageBox(self.connection)
+        self.input_box = InputBox()
         self.working = False
         self.bag = list()
         self.public_key = ""
@@ -146,18 +146,18 @@ class client:
         self.input_box.join()
 
 
-class autor(client):
+class Autor(Client):
 
     def __init__(self, host, proxy):
-        client.__init__(self, host, proxy)
+        Client.__init__(self, host, proxy)
 
     def run(self):
         None
 
-class politician(client):
+class Politician(Client):
 
     def __init__(self, host, proxy):
-        client.__init__(self, host, proxy)
+        Client.__init__(self, host, proxy)
 
     def run(self):
         None
@@ -165,6 +165,6 @@ class politician(client):
 
 if __name__ == "__main__":
     print("START")
-    client("localhost", 1234).run()
+    Client("localhost", 1234).run()
     print("END")
 
