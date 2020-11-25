@@ -146,6 +146,23 @@ class client:
         self.input_box.join()
 
 
+class autor(client):
+
+    def __init__(self, host, proxy):
+        client.__init__(self, host, proxy)
+
+    def run(self):
+        None
+
+class politician(client):
+
+    def __init__(self, host, proxy):
+        client.__init__(self, host, proxy)
+
+    def run(self):
+        None
+
+
 if __name__ == "__main__":
     print("START")
     client("localhost", 1234).run()
