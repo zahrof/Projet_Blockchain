@@ -9,8 +9,10 @@ TCP = [line.split(" ")[0] for line in open("TCP", 'r').read().split('\n')[:-1]]
 lock_clients = threading.RLock()
 lock_printer = threading.RLock()
 
+
 def letters_bag():
-    return []
+    return [chr(secrets.randbelow(26) + ord('a')) for _ in range(50)]
+
 
 class client_server(threading.Thread):
 
