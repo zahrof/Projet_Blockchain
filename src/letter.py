@@ -17,7 +17,7 @@ class Letter(object):
 
         self.signature = self._m.digest()
 
-    def __str__(self):
+    def __str__(self):  # changer str vers un toJson ?
         return """
         letter: {}, period: {},
         head: {},
@@ -26,7 +26,12 @@ class Letter(object):
         """.format(self.letter, self.period, self.head, self.author, self.signature)
 
     def __repr__(self):
-        return str(self)
+        return """
+        letter: {}, period: {},
+        head: {},
+        author: {},
+        signature: {}
+        """.format(self.letter, self.period, self.head, self.author, self.signature)
         
        
 exemple1 = Letter(b"a", 0, b"""123456789""", b"""cafe""")
