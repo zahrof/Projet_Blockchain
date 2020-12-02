@@ -36,3 +36,4 @@ class Letter(object):
        
 exemple1 = Letter(b"a", 0, b"""123456789""", b"""cafe""")
 exemple2 = Letter(b"b", 0, exemple1.signature, b"""456""")
+exemple3 = Letter(b"b", 0, exemple1.signature, b"""456""")
