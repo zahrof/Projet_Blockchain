@@ -11,7 +11,7 @@ TCP = [line.split(" ")[0] for line in open("TCP", 'r').read().split('\n')[:-1]]
 lock_clients = threading.RLock()
 lock_printer = threading.RLock()
 
-
+# Il faut signer les lettres du pool initial pour empecher les joueurs d'en generer
 def letters_bag():
     return [chr(secrets.randbelow(26) + ord('a')) for _ in range(50)]
 
@@ -30,7 +30,7 @@ class Client(threading.Thread):
     def register(self, public_key):
         if self.public_key == "":
             with lock_clients:
-                Server.clients[public_key] = self
+                self.server.clients[public_key] = self
                 self.public_key = public_key
                 self.client.send(str({"letters_bag" : letters_bag()}).encode())
                 with lock_printer:
@@ -111,5 +111,5 @@ class Server(threading.Thread):
 
 
 if __name__ == "__main__":
-    server = Server('', 1234)
+    server = Server('', 6666)
     server.start()

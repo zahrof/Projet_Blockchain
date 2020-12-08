@@ -43,7 +43,7 @@ class Word(object):
         m.update(self.politician_id)
         m.update(self.head)
         m.update(bin(self.period).encode())
-        return (self.signature == m.digest())
+        return (self.signatu_re == m.digest())
         
 
 ###     pour les tests  ###

@@ -10,10 +10,6 @@ TCP = [line.split(" ")[0] for line in open("TCP", 'r').read().split('\n')[:-1]]
 
 lock_msg = threading.RLock()
 
-commandes = ["register cyann",
-             "talk a",
-             "leave"]
-
 class MessageBox(threading.Thread):
 
     def __init__(self, connection):
@@ -80,10 +76,12 @@ class InputBox(threading.Thread):
 
 class Client:
 
-    def __init__(self, host, proxy):
-        self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.connection.connect((host, proxy))
-        print("Connexion établie avec le serveur sur le port {}".format(proxy))
+    def __init__(self, host = "localhost", proxy = 7777, connection = None):
+        if not connection:
+            self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.connection.connect((host, proxy))
+            print("Connexion établie avec le serveur sur le port {}".format(proxy))
+        else : self.connection = connection
         self.message_box = MessageBox(self.connection)
         self.input_box = InputBox()
         self.working = False
@@ -118,7 +116,11 @@ class Client:
         else:
             print("Vous êtes deja enregistré")
 
+    def isAuthor(self):
+        return Author(self.connection)
 
+    def isPolitician(self):
+        return Politician(self.connection)
 
     def run(self):
         self.working = True
@@ -146,18 +148,42 @@ class Client:
         self.input_box.join()
 
 
-class Autor(Client):
+class Author(Client):
 
-    def __init__(self, host, proxy):
-        Client.__init__(self, host, proxy)
+    def __init__(self, connection):
+        Client.__init__(self,connection=connection)
+
 
     def run(self):
-        None
+        self.working = True
+        self.message_box.start()
+        self.input_box.start()
+        print("Pensez a vous enregistrer avec la commande : register $PUBLIC_KEY")
+        while self.working:
+            mails = self.message_box.check()
+            for request in mails.keys():
+                if request in TCP:
+                    for args in mails.get(request):
+                        eval("self." + request + "(args)")
+                else:
+                    print("Requete Non reconnue :", request)
+            mails = self.input_box.check()
+            for request in mails.keys():
+                if request in TCP:
+                    for args in mails.get(request):
+                        eval("self." + request + "(args)")
+                else:
+                    print("Requete Non reconnue :", request)
+        self.message_box.close()
+        self.input_box.close()
+        self.message_box.join()
+        self.input_box.join()
 
 class Politician(Client):
 
-    def __init__(self, host, proxy):
-        Client.__init__(self, host, proxy)
+    def __init__(self, connection):
+        Client.__init__(self, connection=connection)
+
 
     def run(self):
         None
@@ -165,6 +191,6 @@ class Politician(Client):
 
 if __name__ == "__main__":
     print("START")
-    Client("localhost", 1234).run()
+    Client(proxy = 1234).isAuthor().run()
     print("END")
 
