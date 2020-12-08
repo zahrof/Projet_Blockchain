@@ -191,6 +191,6 @@ class Politician(Client):
 
 if __name__ == "__main__":
     print("START")
-    Client(proxy = 1234).isAuthor().run()
+    Client(proxy = 7777).isAuthor().run()
     print("END")
 

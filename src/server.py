@@ -46,7 +46,7 @@ class Client(threading.Thread):
         with lock_clients:
             for client_s in self.server.clients.values():
                 with client_s.lock_send:
-                    client_s.Client.send(str({"message" : [self.public_key, message]}).encode())
+                    client_s.client.send(str({"message" : [self.public_key, message]}).encode())
 
     def leave(self, _):
         with lock_clients:
@@ -56,6 +56,7 @@ class Client(threading.Thread):
         self.client.close()
         self.working = False
 
+    { "word" : "ceci est un mot en str"}
     def run(self):
         self.working = True
 
@@ -111,5 +112,5 @@ class Server(threading.Thread):
 
 
 if __name__ == "__main__":
-    server = Server('', 6666)
+    server = Server('', 7777)
     server.start()
