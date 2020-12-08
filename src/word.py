@@ -38,17 +38,11 @@ class Word(object):
         return ('').join([l.letter.decode('utf-8') for l in self.word])
 
     def check_signature(self):
-        letters = self.word 
-        period = self.period
-        politician_id = self.politician_id 
-        head = self.head 
-
         m = hashlib.sha256()
-        [m.update(letter.signature) for letter in letters]
-        m.update(politician_id)
-        m.update(head)
-        m.update(bin(period).encode())
-
+        [m.update(letter.signature) for letter in self.letters]
+        m.update(self.politician_id)
+        m.update(self.head)
+        m.update(bin(self.period).encode())
         return (self.signature == m.digest())
         
 

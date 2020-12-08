@@ -34,16 +34,11 @@ class Letter(object):
         """.format(self.letter, self.period, self.head, self.author, self.signature)
    
     def check_signature(self):
-        letter = self.letter 
-        period = self.period
-        author = self.author 
-        head = self.head 
-
         m = hashlib.sha256()
-        m.update(letter)
-        m.update(author)
-        m.update(head)
-        m.update(bin(period).encode())
+        m.update(self.letter)
+        m.update(self.author)
+        m.update(self.head)
+        m.update(bin(self.period).encode())
 
         return (self.signature == m.digest())      
 
