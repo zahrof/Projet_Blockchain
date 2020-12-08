@@ -43,6 +43,7 @@ class LetterStore(object):
         #check_signature into logging.warning
         l = letter.letter.decode("utf-8")
         self._hashT[l].append(letter)
+        print(l)
     
     def __init__(self, iter = None, check_sign = True):
         """
@@ -58,6 +59,9 @@ class LetterStore(object):
             for elem in iter:
                 self.add_letter(elem)
     def getCopy(self):
-        return copy.deepcopy(self._hashT)
+        ret = dict()
+        for i in 'azertyuiopqsdfghjklmwxcvbn':
+            ret[i] = self._hashT[i] * 1
+        return ret
 
 
