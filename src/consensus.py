@@ -15,7 +15,12 @@ def scrab_score(c):
 
 # word_score { word; _ } : int =
 def word_score(w):
+    #mémoïser ?
     return sum([scrab_score(c) for c in w.getStr()])
+
+def str_score(string):
+    #mémoïser ?
+    return sum([scrab_score(c) for c in string])
 
 # fitness st word =
 
