@@ -39,6 +39,13 @@ class Client(threading.Thread):
             with self.lock_send:
                 self.client.send(str({"system" : "Requete ignoree : vous etes deja enregistre."}).encode())
 
+    def word(self, word):
+        with lock_printer :
+            print(word)
+        with lock_clients:
+            for client_s in self.server.clients.values():
+                with client_s.lock_send:
+                    client_s.client.send(str({"mot" : word}).encode())
 
     def talk(self, message):
         with lock_printer :
@@ -112,5 +119,5 @@ class Server(threading.Thread):
 
 
 if __name__ == "__main__":
-    server = Server('', 7777)
+    server = Server('', 7779)
     server.start()

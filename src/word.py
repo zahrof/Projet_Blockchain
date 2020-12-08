@@ -2,6 +2,9 @@ import hashlib
 import copy
 import letter 
 
+# creer une fct qui transoforme un Word "({},{},{},{}) ".format (self.letter,Self.period...
+
+
 class Word(object):
     def __init__(self, letters, period, head, politician_id):
 
@@ -20,10 +23,10 @@ class Word(object):
 
     def __str__(self):  # changer str vers un toJson ?
         return """
-        letter: {}, period: {},
+        {letter: {}, period: {},
         head: {},
         politician_id: {},
-        signature: {}
+        signature: {}}
         """.format(self.word, self.period, self.head, self.politician_id, self.signature)
 
     def __repr__(self):
@@ -44,7 +47,9 @@ class Word(object):
         m.update(self.head)
         m.update(bin(self.period).encode())
         return (self.signatu_re == m.digest())
-        
+
+    def serialiaze(self):
+        return "Word({},{},{},{})".format(self.letters, self.period, self.head, self.politician_id, self.signature)
 
 ###     pour les tests  ###
 wexemple0 = Word([letter.lexemple1, letter.lexemple1], 0, b"""123456789""", b"""cafe""")
@@ -58,3 +63,5 @@ if __name__ == "__main__":
     print("on touche au mot")
     wexemple1.period = 1
     print(wexemple1.check_signature())
+
+

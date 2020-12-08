@@ -94,6 +94,12 @@ class Client:
     def talk(self, message):
         self.send("talk", message)
 
+    def word(self, word):
+        self.send("word", word.serialiaze())
+
+    def mot(self, mot):
+        w = eval(mot)
+
     def leave(self, _):
         self.send("leave", None)
         self.working = False
@@ -191,6 +197,6 @@ class Politician(Client):
 
 if __name__ == "__main__":
     print("START")
-    Client(proxy = 7777).isAuthor().run()
+    Client(proxy = 7779).isAuthor().run()
     print("END")
 
