@@ -53,14 +53,14 @@ class Word(object):
         
 
 ###     pour les tests  ###
-exemple0 = Word([letter.exemple1, letter.exemple1], 0, b"""123456789""", b"""cafe""")
-exemple1 = Word([letter.exemple1, letter.exemple2], 0, b"""123456789""", b"""cafe""")
+wexemple0 = Word([letter.lexemple1, letter.lexemple1], 0, b"""123456789""", b"""cafe""")
+wexemple1 = Word([letter.lexemple1, letter.lexemple2], 0, b"""123456789""", b"""cafe""")
     
 
 if __name__ == "__main__":
-    print(exemple1.getStr())
-    print(exemple1.check_signature())
+    print(wexemple1.getStr())
+    print(wexemple1.check_signature())
 
     print("on touche au mot")
-    exemple1.period = 1
-    print(exemple1.check_signature())
+    wexemple1.period = 1
+    print(wexemple1.check_signature())

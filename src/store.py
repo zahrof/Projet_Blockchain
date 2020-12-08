@@ -1,6 +1,6 @@
 from word import *
 import logging
-
+import copy
 
 class WordStore(object):
     def add_word(self, word):
@@ -20,8 +20,9 @@ class WordStore(object):
 
         self.check_sign = check_sign
         self._hashT = dict()
-        for elem in iter:
-            self.add_word(elem)
+        if iter is not None:
+            for elem in iter:
+                self.add_word(elem)
     
     def get_word(self, word):
         # crypter ici ?
@@ -34,5 +35,29 @@ class WordStore(object):
         return self._hashT.__iter__()
 
 if __name__ == "__main__":
-    ws = WordStore([exemple0])  
+    ws = WordStore([wexemple0])  
     print([i for i in ws])
+
+class LetterStore(object):
+    def add_letter(self, letter):
+        #check_signature into logging.warning
+        l = letter.letter.decode("utf-8")
+        self._hashT[l].append(letter)
+    
+    def __init__(self, iter = None, check_sign = True):
+        """
+        iter: itérable de letter à ajouter, potentiellement vide
+        /!\ on a pas encore de crypto (peut-être pas nécessaire)
+        """
+        self.check_sign = check_sign
+        self._hashT = dict()
+        for i in 'azertyuiopqsdfghjklmwxcvbn':
+            self._hashT[i] = list()
+
+        if iter is not None:
+            for elem in iter:
+                self.add_letter(elem)
+    def getCopy(self):
+        return copy.deepcopy(self._hashT)
+
+

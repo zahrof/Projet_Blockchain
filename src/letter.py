@@ -50,11 +50,11 @@ class Letter(object):
 
 ###     pour les tests  ###
 
-exemple1 = Letter(b"a", 0, b"""123456789""", b"""cafe""")
-exemple2 = Letter(b"b", 0, exemple1.signature, b"""456""")
-exemple3 = Letter(b"b", 0, exemple1.signature, b"""456""")
+lexemple1 = Letter(b"a", 0, b"""123456789""", b"""cafe""")
+lexemple2 = Letter(b"b", 0, lexemple1.signature, b"""456""")
+lexemple3 = Letter(b"b", 0, lexemple1.signature, b"""456""")
 
 if __name__ == "__main__":  
-    print(exemple1.check_signature())
-    exemple1.period = 5
-    print(exemple1.check_signature())
+    print(lexemple1.check_signature())
+    lexemple1.period = 5
+    print(lexemple1.check_signature())

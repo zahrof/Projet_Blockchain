@@ -1,6 +1,6 @@
 from letter import *
 from consensus import *
-
+from store import *
 def read_dict(str):
     f = open(str) # peut lever une Exception
     lst = [l for l in f.readlines()]
@@ -67,21 +67,21 @@ def containsWordBestFit(authorLetter, dictionnaire):
             
     return getBest(mem)
 
+if __name__ == "__main__":
+    authorL = LetterStore([lexemple1, lexemple2, lexemple3])
+    authorLetterEx = authorL.getCopy()
+    
+    authorLetterEx['a'].append(lexemple1)
+    authorLetterEx['b'].append(lexemple2)
+    authorLetterEx['b'].append(lexemple3)
+    print(containsWord(authorLetterEx, ['c', 'bb', 'ab']))        # ab
+    print(containsWord(authorLetterEx, ['c', 'a', 'ab']))         # a 
+    print(containsWord(authorLetterEx, ['c', 'bb', 'ab', 'bab'])) # ab
+    print(containsWord(authorLetterEx, ['c', 'bb', 'bab'])) # None 
+    print(containsWord(authorLetterEx, ['c', 'bb']))        # None 
 
-authorLetterEx = dict()
-for i in 'azertyuiopqsdfghjklmwxcvbn':
-    authorLetterEx[i] = list()
-authorLetterEx['a'].append(exemple1)
-authorLetterEx['b'].append(exemple2)
-authorLetterEx['b'].append(exemple3)
-print(containsWord(authorLetterEx, ['c', 'bb', 'ab']))        # ab
-print(containsWord(authorLetterEx, ['c', 'a', 'ab']))         # a 
-print(containsWord(authorLetterEx, ['c', 'bb', 'ab', 'bab'])) # ab
-print(containsWord(authorLetterEx, ['c', 'bb', 'bab'])) # None 
-print(containsWord(authorLetterEx, ['c', 'bb']))        # None 
-
-print(containsWordBestFit(authorLetterEx, ['c', 'bb', 'ab']))        # ab
-print(containsWordBestFit(authorLetterEx, ['c', 'a', 'ab']))         # ab
-print(containsWordBestFit(authorLetterEx, ['c', 'bb', 'ab', 'bab'])) # ab
-print(containsWordBestFit(authorLetterEx, ['c', 'bb', 'bab'])) # None 
-print(containsWordBestFit(authorLetterEx, ['c', 'bb']))        # None 
+    print(containsWordBestFit(authorLetterEx, ['c', 'bb', 'ab']))        # ab
+    print(containsWordBestFit(authorLetterEx, ['c', 'a', 'ab']))         # ab
+    print(containsWordBestFit(authorLetterEx, ['c', 'bb', 'ab', 'bab'])) # ab
+    print(containsWordBestFit(authorLetterEx, ['c', 'bb', 'bab'])) # None 
+    print(containsWordBestFit(authorLetterEx, ['c', 'bb']))        # None e
