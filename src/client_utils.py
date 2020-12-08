@@ -1,15 +1,11 @@
 from letter import *
 from consensus import *
 from store import *
-def read_dict(str):
-    f = open(str) # peut lever une Exception
-    lst = [l for l in f.readlines()]
-    f.close()
-    return lst
+def read_dict(path):
+    with open(path) as file:
+        return [line for line in file.readlines()]
 
 
-f1 = read_dict("../dict/dict_100000_5_15.txt")
-print(len(f1))
 
 # fun: list letter + dict -> None ou mot
 
@@ -70,6 +66,9 @@ def containsWordBestFit(authorLetter, dictionnaire):
 if __name__ == "__main__":
     authorL = LetterStore([lexemple1, lexemple2, lexemple3])
     authorLetterEx = authorL.getCopy()
+
+    f1 = read_dict("../dict/dict_100000_5_15.txt")
+    print(len(f1))
     
     authorLetterEx['a'].append(lexemple1)
     authorLetterEx['b'].append(lexemple2)
@@ -85,3 +84,5 @@ if __name__ == "__main__":
     print(containsWordBestFit(authorLetterEx, ['c', 'bb', 'ab', 'bab'])) # ab
     print(containsWordBestFit(authorLetterEx, ['c', 'bb', 'bab'])) # None 
     print(containsWordBestFit(authorLetterEx, ['c', 'bb']))        # None e
+
+
