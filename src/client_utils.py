@@ -9,10 +9,14 @@ def read_dict(path):
 
 # fun: list letter + dict -> None ou mot
 
-def containsWord(authorLetter, dictionnaire):
+def containsWord(authorLetter, dictionnaire, to = None):
+    if to is None:
+        to = lambda: False
     isVis = set()
     letterUse = list()
     for word in dictionnaire: 
+        if to():
+            return None
         for l in word:
             cand = False
             for letter in authorLetter[l]:
@@ -29,7 +33,7 @@ def containsWord(authorLetter, dictionnaire):
             return (word, letterUse)
     return None
 
-def containsWordBestFit(authorLetter, dictionnaire):
+def containsWordBestFit(authorLetter, dictionnaire, to = None):
     def getBest(arr):
         bestS = 0
         bestE = None
@@ -39,12 +43,16 @@ def containsWordBestFit(authorLetter, dictionnaire):
                 bestS = temp
                 bestE = (word, letter) 
         return bestE
-
+    
+    if to is None:
+        to = lambda: False
     isVis = set()
     letterUse = list()
     mem = list()
     for word in dictionnaire: 
         for l in word:
+            if to():
+                return getBest(mem)
             cand = False
             for letter in authorLetter[l]:
                 if letter.author not in isVis:
