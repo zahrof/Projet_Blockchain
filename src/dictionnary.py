@@ -1,5 +1,3 @@
-
-
 class Dictionnary(list):
 
     def read(self, path):

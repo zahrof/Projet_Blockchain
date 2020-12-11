@@ -40,7 +40,10 @@ class Letter(object):
         m.update(self.head)
         m.update(bin(self.period).encode())
 
-        return (self.signature == m.digest())      
+        return (self.signature == m.digest())
+
+    def serialize(self):
+        return "Letter({},{},{},{})".format(self.letter, self.period, self.head, self.author, self.signature)
 
 
 ###     pour les tests  ###

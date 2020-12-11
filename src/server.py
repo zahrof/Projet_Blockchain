@@ -4,16 +4,15 @@ import select
 import threading
 import json
 
-
-
 TCP = [line.split(" ")[0] for line in open("TCP", 'r').read().split('\n')[:-1]]
 
 lock_clients = threading.RLock()
 lock_printer = threading.RLock()
 
+
 # Il faut signer les lettres du pool initial pour empecher les joueurs d'en generer
 def letters_bag():
-    return [chr(secrets.randbelow(26) + ord('a')) for _ in range(50)]
+    return [chr(secrets.randbelow(26) + ord('a')) for _ in range(5)]
 
 
 class Client(threading.Thread):
@@ -32,51 +31,61 @@ class Client(threading.Thread):
             with lock_clients:
                 self.server.clients[public_key] = self
                 self.public_key = public_key
-                self.client.send(str({"letters_bag" : letters_bag()}).encode())
+                self.client.send(str({"letters_bag": letters_bag()}).encode())
                 with lock_printer:
                     print("new client :", self.infos, self.public_key)
         else:
             with self.lock_send:
-                self.client.send(str({"system" : "Requete ignoree : vous etes deja enregistre."}).encode())
+                self.client.send(str({"system": "Requete ignoree : vous etes deja enregistre."}).encode())
 
-    def word(self, word):
-        with lock_printer :
+    def sendWord(self, word):
+        with lock_printer:
             print(word)
         with lock_clients:
             for client_s in self.server.clients.values():
                 with client_s.lock_send:
-                    client_s.client.send(str({"mot" : word}).encode())
+                    client_s.client.send(str({"receiveWord": word}).encode())
+
+    def sendLetter(self, letter):
+        with lock_printer:
+            print(letter)
+        with lock_clients:
+            for client_s in self.server.clients.values():
+                with client_s.lock_send:
+                    client_s.client.send(str({"receiveLetter": letter}).encode())
 
     def talk(self, message):
-        with lock_printer :
+        with lock_printer:
             print(message)
         with lock_clients:
             for client_s in self.server.clients.values():
                 with client_s.lock_send:
-                    client_s.client.send(str({"message" : [self.public_key, message]}).encode())
+                    client_s.client.send(str({"message": [self.public_key, message]}).encode())
 
     def leave(self, _):
         with lock_clients:
-            del Server.clients[self.public_key]
-            if len(Server.clients.keys()) == 0:
-                Server.working = False
+            del server.clients[self.public_key]
+            if len(server.clients.keys()) == 0:
+                server.working = False
+        self.client.send(str({"system": ""}).encode())
         self.client.close()
         self.working = False
 
-    { "word" : "ceci est un mot en str"}
+    {"word": "ceci est un mot en str"}
+
     def run(self):
         self.working = True
 
         while self.working and self.server.working:
-            try :
+            try:
                 requests = eval(self.client.recv(1024).decode())
             except SyntaxError:
                 continue
             if self.public_key == "":
                 if "register" in requests.keys():
                     self.register(requests["register"])
-                else: # pas besoin de lock, personne ne vous vois
-                    self.client.send(str({"system" : "Requetes ignore, vous devez vous enregistrer."}).encode())
+                else:  # pas besoin de lock, personne ne vous vois
+                    self.client.send(str({"system": "Requetes ignore, vous devez vous enregistrer."}).encode())
             else:
                 for request in requests.keys():
                     if self.working == False:
@@ -85,9 +94,9 @@ class Client(threading.Thread):
                         eval("self." + request + "(requests[request])")
                     else:
                         with self.lock_send:
-                            self.client.send(({"system" : "Requete Non Reconnue : " + request}).encode())
+                            self.client.send(({"system": "Requete Non Reconnue : " + request}).encode())
         with lock_printer:
-            print(self.public_key, "est partis.")
+            print(self.public_key, "est parti.")
         self.client.close()
 
 
@@ -119,5 +128,5 @@ class Server(threading.Thread):
 
 
 if __name__ == "__main__":
-    server = Server('', 7779)
+    server = Server('', 7782)
     server.start()

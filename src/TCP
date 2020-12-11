@@ -4,5 +4,7 @@ system      # message system à un client
 message     # envoie de message à un client
 register    # enregistrement de la clef public d'un client
 letters_bag # envoie d'un sac de lettres à un client
-word        # envoi un mot à un client
-mot         #
+receiveWord # reception d'un mot
+sendWord    # envoi d'un mot à un client
+receiveLetter # reception d'une lettre
+sendLetter # envoi d'une lettre à un client

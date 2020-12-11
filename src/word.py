@@ -48,7 +48,7 @@ class Word(object):
         m.update(bin(self.period).encode())
         return (self.signatu_re == m.digest())
 
-    def serialiaze(self):
+    def serialize(self):
         return "Word({},{},{},{})".format(self.letters, self.period, self.head, self.politician_id, self.signature)
 
 ###     pour les tests  ###
