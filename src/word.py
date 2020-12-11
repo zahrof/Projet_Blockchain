@@ -22,11 +22,11 @@ class Word(object):
         self.signature = self._m.digest()
 
     def __str__(self):  # changer str vers un toJson ?
-        return """
-        {letter: {}, period: {},
+        return """"
+        letter: {}, period: {},
         head: {},
         politician_id: {},
-        signature: {}}
+        signature: {}
         """.format(self.word, self.period, self.head, self.politician_id, self.signature)
 
     def __repr__(self):
@@ -57,6 +57,7 @@ wexemple1 = Word([letter.lexemple1, letter.lexemple2], 0, b"""123456789""", b"""
     
 
 if __name__ == "__main__":
+    print(wexemple1)
     print(wexemple1.getStr())
     print(wexemple1.check_signature())
 

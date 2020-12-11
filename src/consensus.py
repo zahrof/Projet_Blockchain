@@ -1,3 +1,5 @@
+from store import *
+from word import *
 
 def scrab_score(c): 
     # https://fr.wikipedia.org/wiki/Lettres_du_Scrabble#Français
@@ -14,6 +16,7 @@ def scrab_score(c):
     return 10
 
 # word_score { word; _ } : int =
+
 def word_score(w):
     #mémoïser ?
     return sum([scrab_score(c) for c in w.getStr()])
@@ -22,11 +25,13 @@ def str_score(string):
     #mémoïser ?
     return sum([scrab_score(c) for c in string])
 
-# fitness st word =
-def fitness (storeW):
-    return sum([word_score(w) for w in storeW])
+def bestWord(wordS):
+    return max(wordS, key = word_score)
 
-
+def cons(word, wordS):
+    return word_score(word) >= bestWord(wordS)
 #let head ?level (st : Store.word_store) =
  
-
+if __name__ == "__main__":
+    wS = WordStore([wexemple0, wexemple1])
+    print(bestWord(wS))
