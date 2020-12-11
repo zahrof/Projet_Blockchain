@@ -42,8 +42,11 @@ class LetterStore(object):
     def add_letter(self, letter):
         #check_signature into logging.warning
         l = letter.letter.decode("utf-8")
+        if len(l) != 1 or l not in 'azertyuiopqsdfghjklmwxcvbn':
+            logging.warning(l + " is not a valid letter")
+            return
         self._hashT[l].append(letter)
-        print(l)
+        
     
     def __init__(self, iter = None, check_sign = True):
         """
@@ -64,4 +67,6 @@ class LetterStore(object):
             ret[i] = self._hashT[i] * 1
         return ret
 
+    def purge(self):
+        self._hashT.clear()
 

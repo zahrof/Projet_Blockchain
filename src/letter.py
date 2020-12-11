@@ -43,7 +43,7 @@ class Letter(object):
         return (self.signature == m.digest())
 
     def serialize(self):
-        return "Letter({},{},{},{})".format(self.letter, self.period, self.head, self.author, self.signature)
+        return "Letter({},{},{},{},{})".format(self.letter, self.period, self.head, self.author, self.signature)
 
 
 ###     pour les tests  ###
@@ -56,3 +56,4 @@ if __name__ == "__main__":
     print(lexemple1.check_signature())
     lexemple1.period = 5
     print(lexemple1.check_signature())
+    print(lexemple1.serialize())

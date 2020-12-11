@@ -42,14 +42,14 @@ class Word(object):
 
     def check_signature(self):
         m = hashlib.sha256()
-        [m.update(letter.signature) for letter in self.letters]
+        [m.update(letter.signature) for letter in self.word]
         m.update(self.politician_id)
         m.update(self.head)
         m.update(bin(self.period).encode())
-        return (self.signatu_re == m.digest())
+        return (self.signature == m.digest())
 
     def serialize(self):
-        return "Word({},{},{},{})".format(self.letters, self.period, self.head, self.politician_id, self.signature)
+        return "Word({},{},{},{},{})".format(self.word, self.period, self.head, self.politician_id, self.signature)
 
 ###     pour les tests  ###
 wexemple0 = Word([letter.lexemple1, letter.lexemple1], 0, b"""123456789""", b"""cafe""")
@@ -63,5 +63,8 @@ if __name__ == "__main__":
     print("on touche au mot")
     wexemple1.period = 1
     print(wexemple1.check_signature())
+
+    wexemple1.period = 0
+    print(wexemple1.serialize())
 
 

@@ -23,8 +23,10 @@ def str_score(string):
     return sum([scrab_score(c) for c in string])
 
 # fitness st word =
-
+def fitness (storeW):
+    return sum([word_score(w) for w in storeW])
 
 
 #let head ?level (st : Store.word_store) =
+ 
 
