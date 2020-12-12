@@ -41,7 +41,8 @@ def containsWordBestFit(authorLetter, dictionnaire, to = None):
             temp = str_score(word)
             if temp > bestS:
                 bestS = temp
-                bestE = (word, letter) 
+                bestE = (word, letter)
+        print(">>", bestE)
         return bestE
     
     if to is None:

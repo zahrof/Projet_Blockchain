@@ -57,16 +57,20 @@ class Searching(threading.Thread):
         self.working = False
 
     def getBest(self, arr):
-        bestS, bestE = 0, None
+        bestS = 0
+        bestE = None
         for (word, letter) in arr:
             temp = str_score(word)
             if temp > bestS:
                 bestS = temp
                 bestE = (word, letter)
+        print(bestE)
         return bestE
 
     def stop(self):
         self.working = False
+        if self.result:
+            _, self.result = self.result
         return self.result
 
     def run(self):
@@ -93,10 +97,10 @@ class Searching(threading.Thread):
                 mem.append(((word, letterUse)))
                 letterUse = list()
                 isVis = set()
-        _, self.result = self.getBest(mem)
+        self.result = self.getBest(mem)
 
 
 if __name__ == "__main__" :
     print(">>")
-    Politician(proxy=9999, paths=["./../dict/dict_26_1_1.txt"]).bot(1, b"P1")
+    Politician(proxy=int(open("proxy").read()), paths=["./../dict/dict_26_1_1.txt"]).bot(1, b"P1")
     print("<<")

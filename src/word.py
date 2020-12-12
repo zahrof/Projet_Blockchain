@@ -7,7 +7,7 @@ import letter
 
 class Word(object):
     def __init__(self, letters, period, head, politician_id):
-        self.word = letters
+        self.letters = letters
         self.period = period
         self.politician_id = politician_id
         self.head = head
@@ -26,7 +26,7 @@ class Word(object):
         head: {},
         politician_id: {},
         signature: {}
-        """.format(self.word, self.period, self.head, self.politician_id, self.signature)
+        """.format(self.letters, self.period, self.head, self.politician_id, self.signature)
 
     def __repr__(self):
         return """
@@ -34,21 +34,26 @@ class Word(object):
         head: {},
         politician_id: {},
         signature: {}
-        """.format(self.word, self.period, self.head, self.politician_id, self.signature)
+        """.format(self.letters, self.period, self.head, self.politician_id, self.signature)
 
     def getStr(self):
-        return ('').join([l.letter.decode('utf-8') for l in self.word])
+        return ('').join([l.letter.decode('utf-8') for l in self.letters])
 
     def check_signature(self):
         m = hashlib.sha256()
-        [m.update(letter.signature) for letter in self.word]
+        [m.update(letter.signature) for letter in self.letters]
         m.update(self.politician_id)
         m.update(self.head)
         m.update(bin(self.period).encode())
-        return (self.signature == m.digest())
+        return self.signature == m.digest()
+
+    def serialize_letters(self):
+        print(">>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<>>")
+        print("[{}]".format(",".join([l.serialize() for l in self.letters])))
+        return "[{}]".format(",".join([l.serialize() for l in self.letters]))
 
     def serialize(self):
-        return "Word({},{},{},{},{})".format(self.word, self.period, self.head, self.politician_id, self.signature)
+        return "Word({},{},{},{})".format(self.serialize_letters(), self.period, self.head, self.politician_id)
 
 ###     pour les tests  ###
 wexemple0 = Word([letter.lexemple1, letter.lexemple1], 0, b"""123456789""", b"""cafe""")

@@ -3,7 +3,7 @@ import socket
 import select
 import threading
 
-from boxes import MessageBox
+from boxes import MessageBox, InputBox
 
 TCP = [line.split(" ")[0] for line in open("TCP", 'r').read().split('\n')[:-1]]
 
@@ -124,5 +124,5 @@ class Server(threading.Thread):
 
 
 if __name__ == "__main__":
-    server = Server('', 9999)
+    server = Server('', int(open("proxy").read()))
     server.start()

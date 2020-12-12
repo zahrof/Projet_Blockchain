@@ -79,5 +79,5 @@ class Author(Client):
 
 if __name__ == "__main__" :
     print(">>")
-    Author(proxy=9999).bot(1,b"A1")
+    Author(proxy=int(open("proxy").read())).bot(1,b"A1")
     print("<<")
