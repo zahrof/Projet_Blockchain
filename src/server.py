@@ -12,7 +12,7 @@ lock_printer = threading.RLock()
 
 # Il faut signer les lettres du pool initial pour empecher les joueurs d'en generer
 def letters_bag():
-    return [chr(secrets.randbelow(26) + ord('a')) for _ in range(5)]
+    return [chr(secrets.randbelow(26) + ord('a')).encode() for _ in range(5)]
 
 
 class Client(threading.Thread):
@@ -128,5 +128,5 @@ class Server(threading.Thread):
 
 
 if __name__ == "__main__":
-    server = Server('', 7782)
+    server = Server('', 7783)
     server.start()

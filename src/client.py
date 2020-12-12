@@ -4,8 +4,15 @@ import json
 import threading
 import time
 import random
+from asyncio import Event
 
+from dictionnary import Dictionnary
 from letter import Letter
+from client_utils import containsWordBestFit
+from store import LetterStore
+from word import Word
+
+from consensus import str_score
 
 TCP = [line.split(" ")[0] for line in open("TCP", 'r').read().split('\n')[:-1]]
 
@@ -89,7 +96,8 @@ class Client:
         self.working = False
         self.bag = list()
         self.public_key = ""
-        self.blockchain = list()
+        self.blockchain = [Word(b"", 0, b"", b"init")]
+        self.letters_pool = LetterStore()
 
     def send(self, request, message):
         self.connection.send(str({request: message}).encode())
@@ -102,16 +110,17 @@ class Client:
 
     def receiveWord(self, mot):
         w = eval(mot)
+        print(w)
         if w.period == len(self.blockchain):
             print(w)
             self.blockchain.append(w)
 
     def sendLetter(self, letter):
-        self.send("sendLetter", letter)
+        self.send("sendLetter", Letter(letter, len(self.blockchain), self.blockchain[-1].head, self.public_key))
 
-    def receiveLetter(self, letter_encoded):
-        letter = eval(letter_encoded)
-        print(letter)
+    def receiveLetter(self, letter):
+        self.letters_pool.add_letter(eval(letter))
+
 
     def leave(self, _):
         self.send("leave", None)
@@ -126,7 +135,7 @@ class Client:
         self.message(["system", message])
 
     def letters_bag(self, bag):
-        self.bag = [Letter(l.encode(), 0, b"""123456789""", b"""cafe""") for l in bag]
+        self.bag = bag
 
     def register(self, public_key):
         if self.public_key == "":
@@ -135,103 +144,13 @@ class Client:
         else:
             print("Vous êtes deja enregistré")
 
-    def isAuthor(self):
-        return Author(self.connection)
-
-    def isPolitician(self):
-        return Politician(self.connection)
-
-    def run(self):
-        self.working = True
-        self.message_box.start()
-        self.input_box.start()
-        print("Pensez a vous enregistrer avec la commande : register $PUBLIC_KEY")
-        while self.working:
-            mails = self.message_box.check()
-            for request in mails.keys():
-                if request in TCP:
-                    for args in mails.get(request):
-                        eval("self." + request + "(args)")
-                else:
-                    print("Requete Non reconnue :", request)
-            mails = self.input_box.check()
-            for request in mails.keys():
-                if request in TCP:
-                    for args in mails.get(request):
-                        eval("self." + request + "(args)")
-                else:
-                    print("Requete Non reconnue :", request)
-        self.message_box.close()
-        self.input_box.close()
-        self.message_box.join()
-        self.input_box.join()
 
 
-class Author(Client):
-
-    def __init__(self, connection):
-        Client.__init__(self, connection=connection)
-
-    def bot(self, frequency):
-        self.message_box.start()
-        self.register("Claire")
-        t = time.time()
-        self.working = True
-        while self.working:
-            mails = self.message_box.check()
-            for request in mails.keys():
-                if request in TCP:
-                    for args in mails.get(request):
-                        eval("self." + request + "(args)")
-                else:
-                    print("Requete Non reconnue :", request)
-            if time.time()-t > frequency:
-                if self.bag:
-                    letter = self.bag.pop()
-                    print(letter)
-                    self.sendWord(letter)
-                else:
-                    self.leave(None)
-                t = time.time()
-        self.message_box.close()
-        self.message_box.join()
-
-    def run(self):
-        self.working = True
-        self.message_box.start()
-        self.input_box.start()
-        print("Pensez a vous enregistrer avec la commande : register $PUBLIC_KEY")
-        while self.working:
-            mails = self.message_box.check()
-            for request in mails.keys():
-                if request in TCP:
-                    for args in mails.get(request):
-                        eval("self." + request + "(args)")
-                else:
-                    print("Requete Non reconnue :", request)
-            mails = self.input_box.check()
-            for request in mails.keys():
-                if request in TCP:
-                    for args in mails.get(request):
-                        eval("self." + request + "(args)")
-                else:
-                    print("Requete Non reconnue :", request)
-        self.message_box.close()
-        self.input_box.close()
-        self.message_box.join()
-        self.input_box.join()
 
 
-class Politician(Client):
 
-    def __init__(self, connection):
-        Client.__init__(self, connection=connection)
 
-    def run(self):
-        None
 
 
 if __name__ == "__main__":
-    print("START")
-    Client(proxy=7782).isAuthor().bot(1)
-    print("END")
+    None
