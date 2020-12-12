@@ -6,6 +6,8 @@ import time
 TCP = [line.split(" ")[0] for line in open("TCP", 'r').read().split('\n')[:-1]]
 
 
+
+
 class Author(Client):
 
     def __init__(self, host="localhost", proxy=7777, connection=None):
@@ -15,8 +17,19 @@ class Author(Client):
         self.message_box.start()
         self.register(id)
         t = time.time()
-        self.working = True
         size = len(self.blockchain)
+        init = True
+        while init:
+            mails = self.message_box.check()
+            for request in mails.keys():
+                if request in TCP:
+                    for args in mails.get(request):
+                        eval("self." + request + "(args)")
+                else:
+                    print("Requete Non reconnue :", request)
+            if self.bag:
+                init = False
+        self.working = True
         while self.working:
             mails = self.message_box.check()
             for request in mails.keys():
@@ -26,11 +39,11 @@ class Author(Client):
                 else:
                     print("Requete Non reconnue :", request)
             if size == len(self.blockchain):
-                print(size, len(self.blockchain))
                 if self.bag:
                     letter = self.bag.pop()
                     print(letter)
                     self.sendLetter(letter)
+                    size = size + 1
                 else:
                     print(self.blockchain)
                     self.leave(None)
@@ -66,5 +79,5 @@ class Author(Client):
 
 if __name__ == "__main__" :
     print(">>")
-    Author(proxy=7783).bot(1,b"A1")
+    Author(proxy=9999).bot(1,b"A1")
     print("<<")

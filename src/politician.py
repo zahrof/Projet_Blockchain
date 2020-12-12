@@ -34,13 +34,14 @@ class Politician(Client):
                         eval("self." + request + "(args)")
                 else:
                     print("Requete Non reconnue :", request)
-            if time.time() - t < frequency:
+            if time.time() - t > frequency:
                 word = research.stop()
                 research.join()
                 if word:
                     self.sendWord(word)
                 research = Searching(self.letters_pool.getCopy(), self.dictionnary)
                 research.start()
+                t = time.time()
 
 
 
@@ -97,5 +98,5 @@ class Searching(threading.Thread):
 
 if __name__ == "__main__" :
     print(">>")
-    Politician(proxy=7783, paths=["./../dict/dict_26_1_1.txt"]).bot(1, b"P1")
+    Politician(proxy=9999, paths=["./../dict/dict_26_1_1.txt"]).bot(1, b"P1")
     print("<<")
