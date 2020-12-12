@@ -1,6 +1,7 @@
 from client import Client
 from dictionnary import Dictionnary
 from consensus import str_score
+from word import Word
 
 import threading
 import time
@@ -35,10 +36,10 @@ class Politician(Client):
                 else:
                     print("Requete Non reconnue :", request)
             if time.time() - t > frequency:
-                word = research.stop()
+                letters = research.stop()
                 research.join()
-                if word:
-                    self.sendWord(word)
+                if letters:
+                    self.sendWord(Word(letters, len(self.blockchain), self.blockchain[-1].head, self.public_key))
                 research = Searching(self.letters_pool.getCopy(), self.dictionnary)
                 research.start()
                 t = time.time()
@@ -92,7 +93,7 @@ class Searching(threading.Thread):
                 mem.append(((word, letterUse)))
                 letterUse = list()
                 isVis = set()
-        self.result = self.getBest(mem)
+        _, self.result = self.getBest(mem)
 
 
 if __name__ == "__main__" :
