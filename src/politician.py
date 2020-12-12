@@ -68,7 +68,6 @@ class Searching(threading.Thread):
         return self.result
 
     def run(self):
-
         self.working = True
         isVis = set()
         letterUse = list()

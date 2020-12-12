@@ -29,9 +29,15 @@ def bestWord(wordS):
     return max(wordS, key = word_score)
 
 def cons(word, wordS):
-    return word_score(word) >= bestWord(wordS)
+    autS = set()
+    [autS.add(l) for l in word.word]
+    if(len(word.word) != len(autS)):
+        return False # le mot contient plusieurs lettres du même auteur
+    return wordS.get_word(word) is not None and word_score(word) >= word_score(bestWord(wordS))
+
 #let head ?level (st : Store.word_store) =
  
 if __name__ == "__main__":
     wS = WordStore([wexemple0, wexemple1])
     print(bestWord(wS))
+    print(cons(wexemple1, wS))

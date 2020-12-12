@@ -7,7 +7,6 @@ import letter
 
 class Word(object):
     def __init__(self, letters, period, head, politician_id):
-
         self.word = letters
         self.period = period
         self.politician_id = politician_id
