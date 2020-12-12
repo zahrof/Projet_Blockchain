@@ -47,6 +47,8 @@ class LetterStore(object):
             return
         self._hashT[l].append(letter)
         
+    def __len__(self):
+        return sum([len(x) for x in self._hashT.values()])    
     
     def __init__(self, iter = None, check_sign = True):
         """

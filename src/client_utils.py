@@ -91,6 +91,6 @@ if __name__ == "__main__":
     print(containsWordBestFit(authorLetterEx, ['c', 'a', 'ab']))         # ab
     print(containsWordBestFit(authorLetterEx, ['c', 'bb', 'ab', 'bab'])) # ab
     print(containsWordBestFit(authorLetterEx, ['c', 'bb', 'bab'])) # None 
-    print(containsWordBestFit(authorLetterEx, ['c', 'bb']))        # None e
+    print(containsWordBestFit(authorLetterEx, ['c', 'bb']))        # None 
 
 
