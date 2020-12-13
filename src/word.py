@@ -9,11 +9,9 @@ import ed25519
 
 class Word(object):
     def __init__(self, letters, period, head, politician_id):
-        self._privateKey, pubK = ed25519.create_keypair()
-
         self.letters = letters
         self.period = period
-        self.politician_id = pubK.to_bytes()
+        self.politician_id = politician_id
         
         self.head = head
 
@@ -59,6 +57,10 @@ class Word(object):
 
     def serialize(self):
         return "Word({},{},{},{})".format(self.serialize_letters(), self.period, self.head, self.politician_id)
+
+    #def __eq__(self, other):
+        #if not type(other) == Word.__class__: return False
+        #return other.letters is self.letters and other.pe
 
 ###     pour les tests  ###
 wexemple0 = Word([letter.lexemple1, letter.lexemple1], 0, b"""123456789""", b"""cafe""")

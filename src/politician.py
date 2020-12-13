@@ -22,9 +22,22 @@ class Politician(Client):
 
 
     def bot(self, frequency, id = "POLITICIAN"):
-        self.register(id)
         self.message_box.start()
         self.consensus_call.start()
+        self.register(id)
+
+        init = True
+        while init:
+            mails = self.message_box.check()
+            for request in mails.keys():
+                print(request)
+                if request in TCP:
+                    for args in mails.get(request):
+                        eval("self." + request + "(args)")
+                else:
+                    print("Requete Non reconnue :", request)
+            if self.bag and self.blockchain:
+                init = False
         research = Searching(self.letters_pool.getCopy(), self.dictionnary)
         research.start()
         t = time.time()
@@ -43,7 +56,6 @@ class Politician(Client):
                 if letters:
                     if letters[0].period == len(self.blockchain):
                         self.sendWord(Word(letters, len(self.blockchain), self.blockchain[-1].head, self.public_key))
-                    self.letters_pool.purge()
                 research = Searching(self.letters_pool.getCopy(), self.dictionnary)
                 research.start()
                 t = time.time()

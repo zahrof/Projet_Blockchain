@@ -30,7 +30,6 @@ class Author(Client):
                     print("Requete Non reconnue :", request)
             if self.bag and self.blockchain:
                 init = False
-        print(self.bag, len(self.blockchain), self.public_key)
         size = len(self.blockchain)
         self.working = True
         while self.working:

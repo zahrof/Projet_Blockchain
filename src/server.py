@@ -2,6 +2,7 @@ import secrets
 import socket
 import select
 import threading
+import random
 
 from boxes import MessageBox, InputBox
 from word import Word
@@ -32,13 +33,13 @@ class Client(threading.Thread):
         self.lock_kick = threading.RLock()
 
     def send(self, request, args):
-        #with self.lock_send:
-        self.client.send(str({request: args}).encode())
+        with self.lock_send:
+            self.client.send(str({request: args}).encode())
 
     def sendAll(self, request, args):
-        #with lock_clients:
-        for client in self.server.clients.values():
-            client.send(request, args)
+        with lock_clients:
+            for client in self.server.clients.values():
+                client.send(request, args)
 
     def sendTo(self, dest, request, args):
         #with lock_clients:
@@ -54,9 +55,10 @@ class Client(threading.Thread):
                     self.server.head = self
                 else:
                     init = Word(b"", 0, b"", self.server.head.public_key).serialize()
-                self.send("letters_bag", letters_bag())
-                self.send("initial_block", init)
-            #self.server.display("new client :", self.infos, self.public_key)
+            self.send("letters_bag", letters_bag())
+            self.send("initial_block", init)
+            self.server.display("new client :", self.infos, self.public_key)
+            self.server.display("init", init)
         else:
             self.send("system", "Requete ignoree : vous etes deja enregistre.")
 
@@ -66,34 +68,39 @@ class Client(threading.Thread):
         self.sendAll("getVerif", (self.public_key, newblock))
 
     def retVerif(self, args):
-        to, ret = eval(args)
+        to, ret = args
+        self.server.display("RETVERIF", ret)
         self.sendAll("retVerif", (len(server.clients.keys()), ret, to))
 
     def sendWord(self, word):
-        #with lock_clients:
-        for client_s in self.server.clients.values():
-            client_s.send("receiveWord", word)
+        with lock_clients:
+            for client_s in self.server.clients.values():
+                client_s.send("receiveWord", word)
 
     def sendLetter(self, letter):
         #self.server.display(self.public_key, "send letter :", letter)
-        #with lock_clients:
-        for client_s in self.server.clients.values():
-            client_s.send("receiveLetter", letter)
+        with lock_clients:
+            for client_s in self.server.clients.values():
+                client_s.send("receiveLetter", letter)
 
     def talk(self, message):
         #self.server.display(message)
-        #with lock_clients:
-        for client_s in self.server.clients.values():
-            client_s.send("message", [self.public_key, message])
+        with lock_clients:
+            for client_s in self.server.clients.values():
+                client_s.send("message", [self.public_key, message])
 
     def kick(self, to):
-        #with lock_clients:
-        with server.clients.get(to, None) as bad_guy:
+        with lock_clients:
+            bad_guy = server.clients.get(to, None)
             if bad_guy:
                 with bad_guy.lock_kick:
                     bad_guy.kicked.add(self)
-                    if len(bad_guy.kicked) >= (self.server.clients.keys()):
+                    if len(bad_guy.kicked) >= (len(self.server.clients.keys())):
+                        self.sendAll("system", "leader banned")
                         bad_guy.leave(None)
+        with lock_clients:
+            if len(self.server.clients) > 0:
+                random.choice(list(self.server.clients.values())).send("consensus", True)
 
 
 
@@ -116,7 +123,7 @@ class Client(threading.Thread):
                 mails[key] = mails.get(key, []) + news[key]
             if self.public_key == "":
                 if not mails.keys().__contains__("register"):
-                    self.send("system", "En attente d'enregistrement")
+                    #self.send("system", "En attente d'enregistrement")
                     continue
                 else:
                     self.register(mails["register"])

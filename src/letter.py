@@ -1,14 +1,13 @@
 import hashlib
 import copy
-import ed25519
 
 class Letter(object):
     def __init__(self, letter, period, head, author):
-        self._privateKey, pubK = ed25519.create_keypair()
+
 
         self.letter = letter
         self.period = period
-        self.author = pubK.to_bytes()
+        self.author = author
         self.head = head
 
         self._m = hashlib.sha256()

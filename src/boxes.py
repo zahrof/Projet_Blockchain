@@ -26,18 +26,18 @@ class MessageBox(threading.Thread):
             self.box.clear()
         return mails
 
-    def add(self, requests):
-        for request in requests.keys():
-            with self.lock_box:
-                self.box[request] = self.box.get(request, []) + [requests.get(request)]
+    def add(self, msg):
+        for requests in msg:
+            print("<>>><>>>>>",requests)
+            for request in requests.keys():
+                with self.lock_box:
+                    self.box[request] = self.box.get(request, []) + [requests.get(request)]
 
     def run(self):
         self.working = True
         while self.working:
-            try:
-                self.add(eval(self.connection.recv(1024).decode()))
-            except SyntaxError:
-                pass
+            msg = "[{}]".format(self.connection.recv(4096).decode().replace("}{", "},{"))
+            self.add(eval(msg))
 
 
 class InputBox(threading.Thread):
@@ -140,4 +140,4 @@ class ConsensusCall(threading.Thread):
         self.working = True
         while self.working:
             time.sleep(self.frequency)
-            self.message_box.add({"consensus" : None})
+            self.message_box.add([{"consensus" : None}])
