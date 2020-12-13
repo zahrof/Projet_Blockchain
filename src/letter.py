@@ -1,5 +1,6 @@
 import hashlib
 import copy
+import ed25519
 
 class Letter(object):
     def __init__(self, letter, period, head, author, signature = None, pkey = None):
@@ -15,8 +16,14 @@ class Letter(object):
         self._m.update(self.author)
         self._m.update(head)
         self._m.update(bin(period).encode())
+        if signature is not None:
+            self.signature = signature
+            return
 
         self.signature = self._m.digest()
+        if pkey is not None:
+            self.signature = pkey.sign(self.signature, encoding='hex')
+        
 
     def __str__(self):  # changer str vers un toJson ?
         return """
@@ -40,8 +47,10 @@ class Letter(object):
         m.update(self.author)
         m.update(self.head)
         m.update(bin(self.period).encode())
+        tempS = m.digest()
 
-        return (self.signature == m.digest())
+        pubK = ed25519.SigningKey(self.author)
+        return pubK.verify(self.signature, tempS, encoding='hex')
 
     def serialize(self):
         return "Letter({},{},{},{},signature = {})".format(self.letter, self.period, self.head, self.author, self.signature)

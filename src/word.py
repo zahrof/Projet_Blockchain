@@ -21,7 +21,13 @@ class Word(object):
         self._m.update(head)
         self._m.update(bin(period).encode())
 
+        if signature is not None:
+            self.signature = signature
+            return
+
         self.signature = self._m.digest()
+        if pkey is not None:
+            self.signature = pkey.sign(self.signature, encoding='hex')
 
     def __str__(self):  # changer str vers un toJson ?
         return """"
@@ -48,7 +54,11 @@ class Word(object):
         m.update(self.politician_id)
         m.update(self.head)
         m.update(bin(self.period).encode())
-        return self.signature == m.digest()
+        
+        tempS = m.digest()
+
+        pubK = ed25519.SigningKey(self.politician_id)
+        return pubK.verify(self.signature, tempS, encoding='hex')
 
     def serialize_letters(self):
         return "[{}]".format(",".join([l.serialize() for l in self.letters]))
