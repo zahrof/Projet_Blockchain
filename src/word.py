@@ -1,15 +1,20 @@
 import hashlib
 import copy
 import letter 
+import ed25519
+
 
 # creer une fct qui transoforme un Word "({},{},{},{}) ".format (self.letter,Self.period...
 
 
 class Word(object):
     def __init__(self, letters, period, head, politician_id):
+        self._privateKey, pubK = ed25519.create_keypair()
+
         self.letters = letters
         self.period = period
-        self.politician_id = politician_id
+        self.politician_id = pubK.to_bytes()
+        
         self.head = head
 
         self._m = hashlib.sha256()
