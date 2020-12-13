@@ -60,11 +60,14 @@ class Client:
             self.send("getVerif", bestWord(self.word_pool).serialize())
 
     def getVerif(self, args):
-        to, self.tmpblock = args
+        to, tmpblock = args
         self.tmpblock = eval(self.tmpblock)
-        authors = [l.author for l in self.tmpblock.letters]
-        vote = len(authors) == len(set(authors)) and self.word_pool.contains(self.tmpblock) and word_score(self.tmpblock) >= word_score(bestWord(self.word_pool))
-        self.send("retVerif", (to, vote))
+        if [l for l in tmpblock.letters if l.period != tmpblock.period or not l.check_signature()] or not tmpblock.check_signature():
+            self.send("retVerif", (to, False))
+        else:
+            authors = [l.author for l in self.tmpblock.letters]
+            vote = len(authors) == len(set(authors)) and self.word_pool.contains(self.tmpblock) and word_score(self.tmpblock) >= word_score(bestWord(self.word_pool))
+            self.send("retVerif", (to, vote))
 
     def retVerif(self, args):
         if self.tmpblock:

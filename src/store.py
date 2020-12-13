@@ -12,7 +12,10 @@ class WordStore(set):
         # gen une clé RSA ou _hashT ?
         set.__init__(self)
         self.store = set(iter)
-        self.s = set()
+
+    def add(self, word):
+        if not [l for l in word.letters if l.period != word.period or not l.check_signature()] and word.check_signature():
+            set.add(self, word)
 
     def contains(self, item):
         for e in self:
@@ -31,7 +34,7 @@ class LetterStore(object):
     def add_letter(self, letter):
         #check_signature into logging.warning
         l = letter.letter.decode("utf-8")
-        if len(l) != 1 or l not in 'azertyuiopqsdfghjklmwxcvbn':
+        if len(l) != 1 or l not in 'azertyuiopqsdfghjklmwxcvbn' or not letter.check_signature():
             logging.warning(l + " is not a valid letter")
             return
         self._hashT[l].append(letter)
