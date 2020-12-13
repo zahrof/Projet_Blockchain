@@ -2,7 +2,7 @@ import hashlib
 import copy
 
 class Letter(object):
-    def __init__(self, letter, period, head, author):
+    def __init__(self, letter, period, head, author, signature = None, pkey = None):
 
 
         self.letter = letter
@@ -44,7 +44,7 @@ class Letter(object):
         return (self.signature == m.digest())
 
     def serialize(self):
-        return "Letter({},{},{},{})".format(self.letter, self.period, self.head, self.author)
+        return "Letter({},{},{},{},signature = {})".format(self.letter, self.period, self.head, self.author, self.signature)
 
 
 ###     pour les tests  ###
