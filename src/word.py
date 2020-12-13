@@ -57,8 +57,13 @@ class Word(object):
         
         tempS = m.digest()
 
-        pubK = ed25519.VerifyingKey(self.politician_id, encoding='base64')
-        return pubK.verify(self.signature, tempS, encoding='hex')
+        pubK = ed25519.VerifyingKey(self.politician_id)
+        try:
+            pubK.verify(self.signature, tempS, encoding='hex')
+            return True
+        except:
+            print("false")
+            return False
 
     def serialize_letters(self):
         return "[{}]".format(",".join([l.serialize() for l in self.letters]))
