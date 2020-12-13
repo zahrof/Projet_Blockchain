@@ -69,7 +69,7 @@ class Client(threading.Thread):
 
     def retVerif(self, args):
         to, ret = args
-        self.server.display("RETVERIF", ret)
+        self.server.display("Reponse du consencus: ", ret)
         self.sendAll("retVerif", (len(server.clients.keys()), ret, to))
 
     def sendWord(self, word):

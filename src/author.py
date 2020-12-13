@@ -43,11 +43,11 @@ class Author(Client):
             if size == len(self.blockchain):
                 if self.bag:
                     letter = self.bag.pop()
-                    print(letter)
                     self.sendLetter(letter)
                     size = size + 1
                 else:
-                    print(self.blockchain)
+                    #print(self.blockchain)
+                    print("letterbag vide, fin du processus")
                     self.leave(None)
         self.message_box.close()
         self.message_box.join()

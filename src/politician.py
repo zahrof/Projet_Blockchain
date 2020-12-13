@@ -2,6 +2,7 @@ from client import Client
 from dictionnary import Dictionnary
 from consensus import str_score
 from word import Word
+from letter import Letter
 
 import random
 import threading
@@ -47,6 +48,10 @@ class Politician(Client):
             for request in mails.keys():
                 if request in TCP:
                     for args in mails.get(request):
+                        if(request == "receiveLetter"):
+                            print("Letter reçu:", eval(args).letter.decode("utf-8"))
+                        elif(request == "receiveWord"):
+                            print("Mot proposé:", eval(args).getStr())
                         eval("self." + request + "(args)")
                 else:
                     print("Requete Non reconnue :", request)
@@ -80,7 +85,6 @@ class Searching(threading.Thread):
             if temp > bestS:
                 bestS = temp
                 bestE = (word, letter)
-        print(bestE)
         return bestE
 
     def stop(self):

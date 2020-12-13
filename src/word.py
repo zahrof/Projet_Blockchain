@@ -51,8 +51,6 @@ class Word(object):
         return self.signature == m.digest()
 
     def serialize_letters(self):
-        print(">>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<>>")
-        print("[{}]".format(",".join([l.serialize() for l in self.letters])))
         return "[{}]".format(",".join([l.serialize() for l in self.letters]))
 
     def serialize(self):

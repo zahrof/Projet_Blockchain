@@ -50,11 +50,11 @@ class Client:
         self.connection.send(str({request: message}).encode())
 
     def initial_block(self, word):
-        print("initial_block", word)
         self.blockchain.append(eval(word))
 
     def consensus(self, _):
-        print("CONSENSUS!!!",self.public_key,"?=?",self.blockchain[-1].politician_id)
+        if(len(self.word_pool) == 0):
+            return # Nothing
         if self.public_key == self.blockchain[-1].politician_id or _:
             self.tret, self.fret = 0, 0
             self.send("getVerif", bestWord(self.word_pool).serialize())
@@ -64,15 +64,14 @@ class Client:
         self.tmpblock = eval(self.tmpblock)
         authors = [l.author for l in self.tmpblock.letters]
         vote = len(authors) == len(set(authors)) and self.word_pool.contains(self.tmpblock) and word_score(self.tmpblock) >= word_score(bestWord(self.word_pool))
-        print(len(authors) == len(set(authors)) , self.word_pool.contains(self.tmpblock) , word_score(self.tmpblock) >= word_score(bestWord(self.word_pool)))
         self.send("retVerif", (to, vote))
 
     def retVerif(self, args):
         if self.tmpblock:
             n, ret, to = args
-            print(type(n), type(ret),":",ret, type(to))
-            if ret: self.tret += 1
-            else: self.fret += 1
+            self.tret += 1
+            #if ret: self.tret += 1
+            #else: self.fret += 1
             if self.tret >= n/2:
                 self.tret, self.fret = 0, 0
                 self.blockchain.append(self.tmpblock)
@@ -83,24 +82,21 @@ class Client:
                 self.tret, self.fret = 0, 0
                 self.tmpblock = None
                 self.send("kick", to)
-            print("NEWBC :::", self.blockchain)
 
 
     def talk(self, message):
         self.send("talk", message)
 
     def sendWord(self, word):
-        print("sendW", word)
         self.send("sendWord", word.serialize())
 
     def receiveWord(self, mot):
         w = eval(mot)
         if w.period == len(self.blockchain):
-            print(w.politician_id, "send word :", w.getStr())
             self.word_pool.add(w)
 
     def sendLetter(self, letter):
-        print("sendL", letter)
+        print(letter, " a été envoyé")
         self.send("sendLetter", Letter(letter, len(self.blockchain), self.blockchain[-1].head, self.public_key).serialize())
 
     def blockchain(self, chain):
@@ -108,7 +104,6 @@ class Client:
         self.blockchain = chain
 
     def receiveLetter(self, letter):
-        print("recuL", letter)
         self.letters_pool.add_letter(eval(letter))
 
 
@@ -119,17 +114,14 @@ class Client:
     def message(self, args):
         who = args[0]
         message = args[1]
-        print(who, ":", message)
 
     def system(self, message):
         self.message(["system", message])
 
     def letters_bag(self, bag):
-        print("bag", bag)
         self.bag = bag
 
     def register(self, public_key):
-        print(self.public_key)
         self.send("register", self.public_key)
 
 
