@@ -5,7 +5,6 @@ import ed25519
 class Letter(object):
     def __init__(self, letter, period, head, author, signature = None, pkey = None):
 
-
         self.letter = letter
         self.period = period
         self.author = author
@@ -48,8 +47,8 @@ class Letter(object):
         m.update(self.head)
         m.update(bin(self.period).encode())
         tempS = m.digest()
-
-        pubK = ed25519.SigningKey(self.author)
+        print(self.author)
+        pubK = ed25519.VerifyingKey(self.author)
         return pubK.verify(self.signature, tempS, encoding='hex')
 
     def serialize(self):
