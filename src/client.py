@@ -96,7 +96,7 @@ class Client:
             self.word_pool.add(w)
 
     def sendLetter(self, letter):
-        print(letter, " a été envoyé")
+        print(str(letter)[2], " a été envoyé")
         self.send("sendLetter", Letter(letter, len(self.blockchain), self.blockchain[-1].head, self.public_key, pkey=self._privateKey).serialize())
 
     def blockchain(self, chain):

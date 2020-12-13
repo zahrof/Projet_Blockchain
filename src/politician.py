@@ -49,7 +49,7 @@ class Politician(Client):
                 if request in TCP:
                     for args in mails.get(request):
                         if(request == "receiveLetter"):
-                            print("Letter reçu:", eval(args).letter.decode("utf-8"))
+                            print("Lettre reçu:", eval(args).letter.decode("utf-8"))
                         elif(request == "receiveWord"):
                             print("Mot proposé:", eval(args).getStr())
                         eval("self." + request + "(args)")
