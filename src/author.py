@@ -50,6 +50,8 @@ class Author(Client):
                     print("letterbag vide, fin du processus")
                     self.leave(None)
         self.message_box.close()
+        self.consensus_call.close()
+        self.consensus_call.join()
         self.message_box.join()
 
     def run(self):

@@ -26,7 +26,7 @@ class Politician(Client):
         self.message_box.start()
         self.consensus_call.start()
         self.register(id)
-
+        cend = 0
         init = True
         while init:
             mails = self.message_box.check()
@@ -60,10 +60,21 @@ class Politician(Client):
                 research.join()
                 if letters:
                     if letters[0].period == len(self.blockchain):
+                        cend = 0
                         self.sendWord(Word(letters, len(self.blockchain), self.blockchain[-1].head, self.public_key))
+                else:
+                    print("En attente de lettres...")
+                    cend += 1
+                    if cend == 10:
+                        print("time out, fermeture du processus")
+                        self.leave(None)
                 research = Searching(self.letters_pool.getCopy(), self.dictionnary)
                 research.start()
                 t = time.time()
+        self.message_box.close()
+        self.consensus_call.close()
+        self.message_box.join()
+        self.consensus_call.join()
 
 
 

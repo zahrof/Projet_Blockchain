@@ -69,15 +69,15 @@ class Client:
     def retVerif(self, args):
         if self.tmpblock:
             n, ret, to = args
-            self.tret += 1
-            #if ret: self.tret += 1
-            #else: self.fret += 1
+            if ret: self.tret += 1
+            else: self.fret += 1
             if self.tret >= n/2:
                 self.tret, self.fret = 0, 0
                 self.blockchain.append(self.tmpblock)
                 self.letters_pool.purge(len(self.blockchain))
                 self.word_pool.purge(len(self.blockchain))
                 self.tmpblock = None
+                print("blockchain :", self.blockchain)
             elif self.fret >= n/2:
                 self.tret, self.fret = 0, 0
                 self.tmpblock = None
