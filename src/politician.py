@@ -110,6 +110,7 @@ class Searching(threading.Thread):
         letterUse = list()
         mem = list()
         for word in self.dictionnaire:
+            word = random.choice(self.dictionnaire)
             if not self.working:
                 break
             for l in word:
@@ -133,5 +134,5 @@ class Searching(threading.Thread):
 
 if __name__ == "__main__" :
     print(">>")
-    Politician(proxy=int(open("proxy").read()), paths=["./../dict/dict_26_1_1.txt"]).bot(4, str(random.randint(1,1000)).encode())
+    Politician(proxy=int(open("proxy").read()), paths=["./../dict/dict_100000_1_10.txt"]).bot(4, str(random.randint(1,1000)).encode())
     print("<<")
