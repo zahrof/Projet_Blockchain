@@ -61,7 +61,7 @@ class Politician(Client):
                 if letters:
                     if letters[0].period == len(self.blockchain):
                         cend = 0
-                        self.sendWord(Word(letters, len(self.blockchain), self.blockchain[-1].head, self.public_key))
+                        self.sendWord(letters)
                 else:
                     print("En attente de lettres...")
                     cend += 1

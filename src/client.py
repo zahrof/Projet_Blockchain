@@ -87,8 +87,8 @@ class Client:
     def talk(self, message):
         self.send("talk", message)
 
-    def sendWord(self, word):
-        self.send("sendWord", word.serialize())
+    def sendWord(self, letters):
+        self.send("sendWord", Word(letters, len(self.blockchain), self.blockchain[-1].head, self.public_key, pkey=self._privateKey).serialize())
 
     def receiveWord(self, mot):
         w = eval(mot)
@@ -97,7 +97,7 @@ class Client:
 
     def sendLetter(self, letter):
         print(letter, " a été envoyé")
-        self.send("sendLetter", Letter(letter, len(self.blockchain), self.blockchain[-1].head, self.public_key).serialize())
+        self.send("sendLetter", Letter(letter, len(self.blockchain), self.blockchain[-1].head, self.public_key, pkey=self._privateKey).serialize())
 
     def blockchain(self, chain):
         # On peut rajouter un check complet de la BC pour la sécurité
