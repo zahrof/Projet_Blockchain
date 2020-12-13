@@ -3,6 +3,7 @@ from dictionnary import Dictionnary
 from consensus import str_score
 from word import Word
 
+import random
 import threading
 import time
 
@@ -21,8 +22,9 @@ class Politician(Client):
 
 
     def bot(self, frequency, id = "POLITICIAN"):
-        self.message_box.start()
         self.register(id)
+        self.message_box.start()
+        self.consensus_call.start()
         research = Searching(self.letters_pool.getCopy(), self.dictionnary)
         research.start()
         t = time.time()
@@ -39,7 +41,9 @@ class Politician(Client):
                 letters = research.stop()
                 research.join()
                 if letters:
-                    self.sendWord(Word(letters, len(self.blockchain), self.blockchain[-1].head, self.public_key))
+                    if letters[0].period == len(self.blockchain):
+                        self.sendWord(Word(letters, len(self.blockchain), self.blockchain[-1].head, self.public_key))
+                    self.letters_pool.purge()
                 research = Searching(self.letters_pool.getCopy(), self.dictionnary)
                 research.start()
                 t = time.time()
@@ -102,5 +106,5 @@ class Searching(threading.Thread):
 
 if __name__ == "__main__" :
     print(">>")
-    Politician(proxy=int(open("proxy").read()), paths=["./../dict/dict_26_1_1.txt"]).bot(1, b"P1")
+    Politician(proxy=int(open("proxy").read()), paths=["./../dict/dict_26_1_1.txt"]).bot(4, str(random.randint(1,1000)).encode())
     print("<<")

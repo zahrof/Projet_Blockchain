@@ -2,6 +2,7 @@ from client import Client
 
 import threading
 import time
+import random
 
 TCP = [line.split(" ")[0] for line in open("TCP", 'r').read().split('\n')[:-1]]
 
@@ -15,9 +16,9 @@ class Author(Client):
 
     def bot(self, frequency, id = "AUTHOR"):
         self.message_box.start()
+        self.consensus_call.start()
         self.register(id)
-        t = time.time()
-        size = len(self.blockchain)
+
         init = True
         while init:
             mails = self.message_box.check()
@@ -27,8 +28,10 @@ class Author(Client):
                         eval("self." + request + "(args)")
                 else:
                     print("Requete Non reconnue :", request)
-            if self.bag:
+            if self.bag and self.blockchain:
                 init = False
+        print(self.bag, len(self.blockchain), self.public_key)
+        size = len(self.blockchain)
         self.working = True
         while self.working:
             mails = self.message_box.check()
@@ -47,7 +50,6 @@ class Author(Client):
                 else:
                     print(self.blockchain)
                     self.leave(None)
-                t = time.time()
         self.message_box.close()
         self.message_box.join()
 
@@ -79,5 +81,5 @@ class Author(Client):
 
 if __name__ == "__main__" :
     print(">>")
-    Author(proxy=int(open("proxy").read())).bot(1,b"A1")
+    Author(proxy=int(open("proxy").read())).bot(1,str(random.randint(1,1000)).encode())
     print("<<")

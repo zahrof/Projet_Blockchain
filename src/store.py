@@ -70,5 +70,6 @@ class LetterStore(object):
         return ret
 
     def purge(self):
-        self._hashT.clear()
+        for i in 'azertyuiopqsdfghjklmwxcvbn':
+            self._hashT[i] = list()
 

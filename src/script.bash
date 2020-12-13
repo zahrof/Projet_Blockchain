@@ -33,7 +33,7 @@ for i in $(seq 1 $POLI); do
 done
 
 for i in $(seq 1 $AUTH); do 
-	gnome-terminal --title="Author $i"  -- python3 author.py
+	gnome-terminal --title="Author $i"  -- python3 author.py;
 done
 
 

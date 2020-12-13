@@ -8,3 +8,8 @@ receiveWord     # reception d'un mot
 sendWord        # envoi d'un mot à un client
 receiveLetter   # reception d'une lettre
 sendLetter      # envoi d'une lettre à un client
+consensus       #
+getVerif        #
+retVerif        #
+kick            #
+initial_block   #

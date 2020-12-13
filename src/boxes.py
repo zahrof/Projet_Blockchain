@@ -1,4 +1,5 @@
 import threading
+import time
 
 
 class MessageBox(threading.Thread):
@@ -122,3 +123,21 @@ class InputBox(threading.Thread):
         self.working = True
         while self.working:
             self.add(input(""))
+
+
+class ConsensusCall(threading.Thread):
+
+    def __init__(self, message_box, frequency = 10):
+        threading.Thread.__init__(self)
+        self.message_box = message_box
+        self.working = False
+        self.frequency = frequency
+
+    def close(self):
+        self.working = False
+
+    def run(self):
+        self.working = True
+        while self.working:
+            time.sleep(self.frequency)
+            self.message_box.add({"consensus" : None})

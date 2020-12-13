@@ -4,6 +4,7 @@ import select
 import threading
 
 from boxes import MessageBox, InputBox
+from word import Word
 
 TCP = [line.split(" ")[0] for line in open("TCP", 'r').read().split('\n')[:-1]]
 
@@ -14,6 +15,7 @@ lock_printer = threading.RLock()
 # Il faut signer les lettres du pool initial pour empecher les joueurs d'en generer
 def letters_bag():
     return [chr(secrets.randbelow(26) + ord('a')).encode() for _ in range(5)]
+
 
 class Client(threading.Thread):
 
@@ -26,39 +28,74 @@ class Client(threading.Thread):
         self.public_key = ""
         self.requests = {}
         self.lock_send = threading.RLock()
+        self.kicked = set()
+        self.lock_kick = threading.RLock()
 
     def send(self, request, args):
-        with self.lock_send:
-            self.client.send(str({request: args}).encode())
+        #with self.lock_send:
+        self.client.send(str({request: args}).encode())
+
+    def sendAll(self, request, args):
+        #with lock_clients:
+        for client in self.server.clients.values():
+            client.send(request, args)
+
+    def sendTo(self, dest, request, args):
+        #with lock_clients:
+        server.clients[dest].send(request, args)
 
     def register(self, public_key):
-        self.server.display("public_key", public_key)
         if self.public_key == "":
             with lock_clients:
                 self.server.clients[public_key[0]] = self
                 self.public_key = public_key[0]
-            self.client.send(str({"letters_bag": letters_bag()}).encode())
-            self.server.display("new client :", self.infos, self.public_key)
+                if not self.server.head:
+                    init = Word(b"", 0, b"", self.public_key).serialize()
+                    self.server.head = self
+                else:
+                    init = Word(b"", 0, b"", self.server.head.public_key).serialize()
+                self.send("letters_bag", letters_bag())
+                self.send("initial_block", init)
+            #self.server.display("new client :", self.infos, self.public_key)
         else:
             self.send("system", "Requete ignoree : vous etes deja enregistre.")
 
+
+
+    def getVerif(self, newblock):
+        self.sendAll("getVerif", (self.public_key, newblock))
+
+    def retVerif(self, args):
+        to, ret = eval(args)
+        self.sendAll("retVerif", (len(server.clients.keys()), ret, to))
+
     def sendWord(self, word):
-        self.server.display(word)
-        with lock_clients:
-            for client_s in self.server.clients.values():
-                client_s.send("receiveWord", word)
+        #with lock_clients:
+        for client_s in self.server.clients.values():
+            client_s.send("receiveWord", word)
 
     def sendLetter(self, letter):
-        self.server.display(self.public_key, "send letter :", letter)
-        with lock_clients:
-            for client_s in self.server.clients.values():
-                client_s.send("receiveLetter", letter)
+        #self.server.display(self.public_key, "send letter :", letter)
+        #with lock_clients:
+        for client_s in self.server.clients.values():
+            client_s.send("receiveLetter", letter)
 
     def talk(self, message):
-        self.server.display(message)
-        with lock_clients:
-            for client_s in self.server.clients.values():
-                client_s.send("message", [self.public_key, message])
+        #self.server.display(message)
+        #with lock_clients:
+        for client_s in self.server.clients.values():
+            client_s.send("message", [self.public_key, message])
+
+    def kick(self, to):
+        #with lock_clients:
+        with server.clients.get(to, None) as bad_guy:
+            if bad_guy:
+                with bad_guy.lock_kick:
+                    bad_guy.kicked.add(self)
+                    if len(bad_guy.kicked) >= (self.server.clients.keys()):
+                        bad_guy.leave(None)
+
+
 
     def leave(self, _):
         with lock_clients:
@@ -72,12 +109,14 @@ class Client(threading.Thread):
     def run(self):
         self.working = True
         self.message_box.start()
-
+        mails = {}
         while self.working and self.server.working:
-            mails = self.message_box.check()
+            news = self.message_box.check()
+            for key in news.keys():
+                mails[key] = mails.get(key, []) + news[key]
             if self.public_key == "":
                 if not mails.keys().__contains__("register"):
-                    self.send("system", "Requetes ignorees, vous devez vous enregistrer.")
+                    self.send("system", "En attente d'enregistrement")
                     continue
                 else:
                     self.register(mails["register"])
@@ -88,6 +127,7 @@ class Client(threading.Thread):
                         eval("self." + request + "(args)")
                 else:
                     print("Requete Non reconnue :", request)
+            mails.clear()
         self.message_box.close()
         self.server.display(self.public_key, "est parti.")
         self.client.close()
@@ -104,6 +144,8 @@ class Server(threading.Thread):
         self.display("Le serveur écoute à present sur le port {}".format(proxy))
         self.host, self.proxy = host, proxy
         self.working = False
+        self.head = None
+        self.head
         self.clients = {}
 
     def display(self, *message):
