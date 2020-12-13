@@ -61,8 +61,8 @@ class Client:
 
     def getVerif(self, args):
         to, tmpblock = args
-        self.tmpblock = eval(self.tmpblock)
-        if [l for l in tmpblock.letters if l.period != tmpblock.period or not l.check_signature()] or not tmpblock.check_signature():
+        self.tmpblock = eval(tmpblock)
+        if [l for l in self.tmpblock.letters if l.period != self.tmpblock.period or not l.check_signature()] or not self.tmpblock.check_signature():
             self.send("retVerif", (to, False))
         else:
             authors = [l.author for l in self.tmpblock.letters]

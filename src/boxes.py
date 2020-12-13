@@ -29,7 +29,7 @@ class MessageBox(threading.Thread):
     def run(self):
         self.working = True
         while self.working:
-            msg = "[{}]".format(self.connection.recv(4096).decode().replace("}{", "},{"))
+            msg = "[{}]".format(self.connection.recv(65536).decode().replace("}{", "},{"))
             self.add(eval(msg))
 
 
