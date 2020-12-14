@@ -22,7 +22,9 @@ Remarque : on utilise le gnome-terminal de linux, il est est possible que des mo
 Il est possible de lancer le serveur depuis le dossier src, les politiciens et les auteurs séparemment (attention, il s'agit possiblement de python3 sur votre config):
 
 ```  python server.py ```
+
 ```  python politician.py  ```
+
 ```  python author.py ```
 
 ## Protocole 
