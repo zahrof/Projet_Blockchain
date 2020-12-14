@@ -11,6 +11,20 @@ Ainsi que le package python ed25519. Pour l'installer  vous pouvez effectuer la 
 
 ```  pip install ed25519 ```
 
+## Run
+
+Pour lancer le client serveur, on peut lancer le script.sh depuis le dossier src
+
+Remarque : on utilise le gnome-terminal de linux, il est est possible que des modifications soient necessaires pour le lancer sur d'autres configs
+
+```  ./script.sh $NBPOLITICIENS $NBAUTEURS $PROXY```
+
+Il est possible de lancer le serveur depuis le dossier src, les politiciens et les auteurs séparemment (attention, il s'agit possiblement de python3 sur votre config):
+
+```  python server.py ```
+```  python politician.py  ```
+```  python author.py ```
+
 ## Protocole 
 
 Nous avons implementé un serveur TCP classique dont les descriptions des requêtes sont les suivante: 
