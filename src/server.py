@@ -4,7 +4,7 @@ import select
 import threading
 import random
 
-from boxes import MessageBox, InputBox
+from boxes import MessageBox
 from word import Word
 
 TCP = [line.split(" ")[0] for line in open("TCP", 'r').read().split('\n')[:-1]]

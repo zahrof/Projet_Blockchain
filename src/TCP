@@ -1,4 +1,4 @@
-talk            # parle a l'ensemble des clients
+talk            # parle à l'ensemble des clients
 leave           # un client sort du scrabblos
 system          # message system à un client
 message         # envoie de message à un client
@@ -8,8 +8,8 @@ receiveWord     # reception d'un mot
 sendWord        # envoi d'un mot à un client
 receiveLetter   # reception d'une lettre
 sendLetter      # envoi d'une lettre à un client
-consensus       #
-getVerif        #
-retVerif        #
-kick            #
-initial_block   #
+consensus       # demande d'initiation à un consensus (peut être ignoré)
+getVerif        # demande la vérification d'un bloc
+retVerif        # retourne le vote pour l'ajout ou non d'un bloc
+kick            # demande de kick d'un utilisateur
+initial_block   # bloc initial de la chaine dont l'auteur est le premier à arriver sur le serveur

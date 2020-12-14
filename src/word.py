@@ -1,5 +1,4 @@
 import hashlib
-import copy
 import letter 
 import ed25519
 

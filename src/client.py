@@ -1,15 +1,8 @@
 import socket
-import select
-import json
 import threading
-import time
-import random
-from asyncio import Event
 import ed25519
 
-from dictionnary import Dictionnary
 from letter import Letter
-from client_utils import containsWordBestFit
 from store import LetterStore, WordStore
 from word import Word
 from boxes import MessageBox, InputBox, ConsensusCall
@@ -21,10 +14,6 @@ from consensus import str_score
 TCP = [line.split(" ")[0] for line in open("TCP", 'r').read().split('\n')[:-1]]
 
 lock_msg = threading.RLock()
-
-
-
-
 
 class Client:
 

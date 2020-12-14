@@ -1,13 +1,8 @@
 from client import Client
 
-import threading
-import time
 import random
 
 TCP = [line.split(" ")[0] for line in open("TCP", 'r').read().split('\n')[:-1]]
-
-
-
 
 class Author(Client):
 

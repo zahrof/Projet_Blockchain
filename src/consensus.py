@@ -30,7 +30,7 @@ def bestWord(wordS):
 
 def cons(word, wordS):
     autS = set()
-    [autS.add(l) for l in word.word]
+    [autS.add(l.author) for l in word.word]
     if(len(word.word) != len(autS)):
         return False # le mot contient plusieurs lettres du même auteur
     return wordS.get_word(word) is not None and word_score(word) >= word_score(bestWord(wordS))

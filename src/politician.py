@@ -1,8 +1,6 @@
 from client import Client
 from dictionnary import Dictionnary
 from consensus import str_score
-from word import Word
-from letter import Letter
 
 import random
 import threading

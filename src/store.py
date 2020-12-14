@@ -1,6 +1,5 @@
 from word import *
 import logging
-import copy
 
 class WordStore(set):
 
@@ -14,6 +13,7 @@ class WordStore(set):
         self.store = set(iter)
 
     def add(self, word):
+        #ADD verif plusieurs lettre d'un même auteur
         if not [l for l in word.letters if l.period != word.period or not l.check_signature()] and word.check_signature():
             set.add(self, word)
 

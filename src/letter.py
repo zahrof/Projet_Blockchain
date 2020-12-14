@@ -1,5 +1,4 @@
 import hashlib
-import copy
 import ed25519
 
 class Letter(object):
